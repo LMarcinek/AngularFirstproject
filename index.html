@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       
    <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -20,14 +20,40 @@
     <style>
      .center-block{
          float: left;
+         
+     }
+     input{
+         margin-top: 3px;
      }
     </style>
 </head>
 <body ng-app="aplication">
+    
     <div class="container" ng-controller="controlSkiJump">
         <div class="row">
             <div class="col-sm-8 center-block">
-                    <h1 class="text-center">Klasyfiakcja skoczkow narciarskich</h1>
+                    <h1 class="text-center">Klasyfiakcja {{skoczkowie.length}} skoczkow narciarskich</h1>
+                        <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Add Jumper
+      </button>
+      
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+          
+            <div class="modal-body">
+                <label for="">Surnname and Name</label>
+              <input type="text" class="form-control" ng-model="jumper">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" ng-click="addJumper()">Add Jumper </button>
+            </div>
+          </div>
+        </div>
+      </div>
                     <div class="input-group">
                         <span class="input-group-addon"> Szukaj:</span>
                         <input type="text" class="form-control" placeholder="Czego Szukasz ?" ng-model="search">
@@ -37,7 +63,7 @@
                             <thead>
                                 <tr>
                                     <th ng-repeat="name in [
-                                    'imie', 'narodowosc', 'miejsce', 'Punkty'
+                                    'imie', 'narodowosc', 'miejsce', 'Punkty' , 'delete'
                                     ]">
                                     {{name}}
                                     </th>
@@ -45,10 +71,15 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat='skoczek in skoczkowie | filter : search'>
-                                    <td >{{skoczek.Name}}</td>
+                                    <td >{{skoczek.Name}}
+                                        
+                                        <button ng-click="edit =! edit" class="btn btn-default btn-xs pull-right">edycja</button>
+                                        <input type="text" class="form-control" ng-if="edit" ng-model="skoczek.Name">
+                                    </td>
                                     <td >{{skoczek.Bib}}</td>
                                     <td >{{skoczek.Rank}}</td>
                                     <td >{{skoczek.TotPoints}}</td>
+                                    <td><button ng-click="deleteJumper( $index )" class="btn btn-danger btn-xs">&times;</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -57,215 +88,10 @@
             
         </div>
     </div>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-    <script>
-        var app = angular.module('aplication', []);
-
-        app.controller('controlSkiJump', ['$scope', '$filter' , function($scope) {
-            $scope.skoczkowie =  [
-                                {
-                                  "Rank": 1,
-                                  "Bib": 38,
-                                  "Name": "GEIGER Karl",
-                                  "TotPoints": 269.4
-                                },
-                                {
-                                  "Rank": 2,
-                                  "Bib": 41,
-                                  "Name": "KLIMOV Evgeniy",
-                                  "TotPoints": 265
-                                },
-                                {
-                                  "Rank": 3,
-                                  "Bib": 36,
-                                  "Name": "KUBACKI Dawid",
-                                  "TotPoints": 261.1
-                                },
-                                {
-                                  "Rank": 4,
-                                  "Bib": 39,
-                                  "Name": "ZYLA Piotr",
-                                  "TotPoints": 253.5
-                                },
-                                {
-                                  "Rank": 5,
-                                  "Bib": 40,
-                                  "Name": "STOCH Kamil",
-                                  "TotPoints": 250.6
-                                },
-                                {
-                                  "Rank": 6,
-                                  "Bib": 32,
-                                  "Name": "HULA Stefan",
-                                  "TotPoints": 250
-                                },
-                                {
-                                  "Rank": 7,
-                                  "Bib": 37,
-                                  "Name": "KOBAYASHI Ryoyu",
-                                  "TotPoints": 249.5
-                                },
-                                {
-                                  "Rank": 8,
-                                  "Bib": 33,
-                                  "Name": "WOLNY Jakub",
-                                  "TotPoints": 244.4
-                                },
-                                {
-                                  "Rank": 9,
-                                  "Bib": 13,
-                                  "Name": "LEYHE Stephan",
-                                  "TotPoints": 242.4
-                                },
-                                {
-                                  "Rank": 10,
-                                  "Bib": 27,
-                                  "Name": "KOT Maciej",
-                                  "TotPoints": 241.7
-                                },
-                                {
-                                  "Rank": 11,
-                                  "Bib": 14,
-                                  "Name": "FETTNER Manuel",
-                                  "TotPoints": 240.4
-                                },
-                                {
-                                  "Rank": 12,
-                                  "Bib": 29,
-                                  "Name": "TAKEUCHI Taku",
-                                  "TotPoints": 240.3
-                                },
-                                {
-                                  "Rank": 13,
-                                  "Bib": 8,
-                                  "Name": "POLASEK Viktor",
-                                  "TotPoints": 240.2
-                                },
-                                {
-                                  "Rank": 14,
-                                  "Bib": 24,
-                                  "Name": "ZOGRAFSKI Vladimir",
-                                  "TotPoints": 238.8
-                                },
-                                {
-                                  "Rank": 15,
-                                  "Bib": 25,
-                                  "Name": "KOBAYASHI Junshiro",
-                                  "TotPoints": 238.2
-                                },
-                                {
-                                  "Rank": 16,
-                                  "Bib": 21,
-                                  "Name": "PASCHKE Pius",
-                                  "TotPoints": 236.4
-                                },
-                                {
-                                  "Rank": 17,
-                                  "Bib": 11,
-                                  "Name": "SCHWANN Mika",
-                                  "TotPoints": 234.9
-                                },
-                                {
-                                  "Rank": 18,
-                                  "Bib": 34,
-                                  "Name": "VASSILIEV Dmitriy",
-                                  "TotPoints": 233.2
-                                },
-                                {
-                                  "Rank": 19,
-                                  "Bib": 7,
-                                  "Name": "PREVC Domen",
-                                  "TotPoints": 230.8
-                                },
-                                {
-                                  "Rank": 20,
-                                  "Bib": 26,
-                                  "Name": "KOFLER Andreas",
-                                  "TotPoints": 229.4
-                                },
-                                {
-                                  "Rank": 21,
-                                  "Bib": 28,
-                                  "Name": "TOCHIMOTO Shohei",
-                                  "TotPoints": 228.2
-                                },
-                                {
-                                  "Rank": 22,
-                                  "Bib": 23,
-                                  "Name": "INSAM Alex",
-                                  "TotPoints": 227.8
-                                },
-                                {
-                                  "Rank": 23,
-                                  "Bib": 12,
-                                  "Name": "HOERL Jan",
-                                  "TotPoints": 226.6
-                                },
-                                {
-                                  "Rank": 24,
-                                  "Bib": 18,
-                                  "Name": "NAZAROV Mikhail",
-                                  "TotPoints": 225.5
-                                },
-                                {
-                                  "Rank": 25,
-                                  "Bib": 31,
-                                  "Name": "SATO Yukiya",
-                                  "TotPoints": 225
-                                },
-                                {
-                                  "Rank": 26,
-                                  "Bib": 15,
-                                  "Name": "SCHIFFNER Markus",
-                                  "TotPoints": 224.9
-                                },
-                                {
-                                  "Rank": 27,
-                                  "Bib": 16,
-                                  "Name": "TKACHENKO Sergey",
-                                  "TotPoints": 222.3
-                                },
-                                {
-                                  "Rank": 28,
-                                  "Bib": 9,
-                                  "Name": "HAZETDINOV Ilmir",
-                                  "TotPoints": 221.4
-                                },
-                                {
-                                  "Rank": 29,
-                                  "Bib": 2,
-                                  "Name": "RUPITSCH Markus",
-                                  "TotPoints": 220.2
-                                },
-                                {
-                                  "Rank": 30,
-                                  "Bib": 22,
-                                  "Name": "HLAVA Lukas",
-                                  "TotPoints": 116.2
-                                },
-                                {
-                                  "Rank": 31,
-                                  "Bib": 4,
-                                  "Name": "CHOI Heung Chul",
-                                  "TotPoints": 105.1
-                                },
-                                {
-                                  "Rank": 32,
-                                  "Bib": 1,
-                                  "Name": "BRESADOLA Davide",
-                                  "TotPoints": 103.4
-                                },
-                                {
-                                  "Rank": 33,
-                                  "Bib": 3,
-                                  "Name": "COLLOREDO Sebastian",
-                                  "TotPoints": 75.1
-                                }
-                               
-            ]
-        }]);
+    <script src="aplication.js"> 
+        
         
     </script>
 </body>
